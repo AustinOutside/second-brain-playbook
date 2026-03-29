@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Claude Second Brain Playbook</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; padding: 24px; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; color: #fff; }
+  .subtitle { color: #888; font-size: 14px; margin-bottom: 8px; }
+  .byline { color: #555; font-size: 12px; margin-bottom: 32px; }
+  .byline a { color: #4ade80; text-decoration: none; }
+  .byline a:hover { text-decoration: underline; }
+
+  /* Navigation */
+  .nav { position: sticky; top: 0; background: #0a0a0aee; backdrop-filter: blur(12px); padding: 12px 0; border-bottom: 1px solid #1a1a1a; margin-bottom: 24px; z-index: 10; display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav a { color: #888; font-size: 11px; text-decoration: none; padding: 4px 10px; border: 1px solid #222; border-radius: 20px; transition: all 0.2s; white-space: nowrap; }
+  .nav a:hover { color: #4ade80; border-color: #4ade80; }
+
+  /* Sections */
+  .section { background: #111; border: 1px solid #222; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .section h2 { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section h2 .icon { font-size: 22px; }
+  .section h3 { font-size: 15px; font-weight: 600; color: #ccc; margin: 20px 0 10px; }
+  .section p { font-size: 14px; color: #bbb; margin-bottom: 12px; }
+  .section ul { font-size: 14px; color: #bbb; padding-left: 20px; margin-bottom: 12px; }
+  .section li { margin-bottom: 6px; }
+  .section li strong { color: #ddd; }
+
+  /* Tips */
+  .tip { background: #0d1117; border-left: 3px solid #4ade80; padding: 14px 16px; margin: 14px 0; border-radius: 0 8px 8px 0; }
+  .tip.warn { border-left-color: #f59e0b; }
+  .tip.blue { border-left-color: #60a5fa; }
+  .tip.purple { border-left-color: #a78bfa; }
+  .tip-title { font-size: 13px; font-weight: 600; color: #4ade80; margin-bottom: 4px; }
+  .tip.warn .tip-title { color: #f59e0b; }
+  .tip.blue .tip-title { color: #60a5fa; }
+  .tip.purple .tip-title { color: #a78bfa; }
+  .tip-body { font-size: 13px; color: #bbb; }
+
+  /* Workflow cards */
+  .workflow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .wf-card { background: #0d0d0d; border: 1px solid #222; border-radius: 8px; padding: 14px; }
+  .wf-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600; }
+  .wf-card .label.mb1 { color: #4ade80; }
+  .wf-card .label.mb2 { color: #60a5fa; }
+  .wf-card .desc { font-size: 13px; color: #bbb; }
+
+  /* Command blocks */
+  .cmd-wrap { position: relative; margin: 12px 0; }
+  .cmd-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .cmd { background: #0d0d0d; border: 1px solid #222; border-radius: 8px; padding: 12px 50px 12px 16px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; color: #4ade80; overflow-x: auto; white-space: pre; }
+  .copy-btn { position: absolute; top: 8px; right: 8px; background: #222; border: 1px solid #333; color: #888; font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-family: -apple-system, BlinkMacSystemFont, sans-serif; z-index: 2; }
+  .copy-btn:hover { background: #333; color: #fff; }
+  .copy-btn.copied { background: #22c55e; color: #000; border-color: #22c55e; }
+
+  /* Two-column layout */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .col-card { background: #0d0d0d; border: 1px solid #222; border-radius: 8px; padding: 14px; }
+  .col-card h4 { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  .col-card ul { font-size: 13px; color: #bbb; padding-left: 16px; }
+  .col-card li { margin-bottom: 4px; }
+
+  /* Scenario cards */
+  .scenario { background: #0d0d0d; border: 1px solid #222; border-radius: 8px; padding: 16px; margin: 12px 0; }
+  .scenario .label { font-size: 12px; font-weight: 600; color: #f59e0b; margin-bottom: 6px; }
+  .scenario .steps { font-size: 13px; color: #bbb; }
+  .scenario .steps span { color: #4ade80; font-weight: 500; }
+
+  /* Recipe cards */
+  .recipe { background: #0d0d0d; border: 1px solid #333; border-radius: 10px; padding: 18px; margin: 14px 0; }
+  .recipe .recipe-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .recipe .recipe-desc { font-size: 12px; color: #888; margin-bottom: 10px; }
+  .recipe .recipe-prompt { background: #111; border: 1px solid #222; border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #4ade80; font-style: italic; }
+  .recipe .recipe-where { font-size: 11px; color: #666; margin-top: 8px; }
+  .recipe .recipe-where strong { color: #888; }
+
+  /* Badge */
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge.green { background: #0d2818; color: #4ade80; border: 1px solid #16a34a33; }
+  .badge.blue { background: #0d1b2a; color: #60a5fa; border: 1px solid #3b82f633; }
+
+  .divider { border: none; border-top: 1px solid #1a1a1a; margin: 20px 0; }
+
+  @media (max-width: 600px) {
+    .workflow, .two-col, .three-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>The Claude Second Brain Playbook</h1>
+<p class="subtitle">How to turn Claude into a 24/7 personal assistant with a dual-Mac setup</p>
+<p class="byline">By <a href="https://austinvirts.com" target="_blank">Austin Virts</a> &middot; March 2026</p>
+
+<nav class="nav">
+  <a href="#concept">The Concept</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#sync-script">Sync Script</a>
+  <a href="#memory">Memory System</a>
+  <a href="#scheduled">Scheduled Tasks</a>
+  <a href="#connectors">Connectors</a>
+  <a href="#recipes">Recipes</a>
+  <a href="#workflows">Daily Workflows</a>
+  <a href="#plugins">Plugins</a>
+  <a href="#skills">Custom Skills</a>
+  <a href="#power-tips">Power Tips</a>
+  <a href="#commands">Quick Commands</a>
+  <a href="#troubleshooting">Troubleshooting</a>
+</nav>
+
+<!-- ============================================ -->
+<!-- THE CONCEPT -->
+<!-- ============================================ -->
+<div class="section" id="concept">
+  <h2><span class="icon">&#x1F9E0;</span> The Concept</h2>
+  <p>Claude Cowork (Anthropic's desktop AI assistant) is powerful on its own. But it forgets everything between sessions, can't run tasks while you're away, and only works on the machine in front of you.</p>
+  <p>The "Second Brain" setup solves all three problems by pairing two MacBooks with a background sync daemon:</p>
+
+  <div class="workflow">
+    <div class="wf-card">
+      <div class="label mb1">Mac 1 — The Second Brain</div>
+      <div class="desc">Always-on at home. Runs scheduled tasks, long jobs, and automations in the background 24/7. Plugged in, lid open, never sleeps.</div>
+    </div>
+    <div class="wf-card">
+      <div class="label mb2">Mac 2 — Daily Driver</div>
+      <div class="desc">Portable. Interactive work, content creation, research on the go. Same Claude context as Mac 1 — pick up right where you left off.</div>
+    </div>
+  </div>
+
+  <p>A background daemon syncs Claude's memory (CLAUDE.md, TASKS.md, memory files) between both machines through iCloud Drive every 60 seconds. Every person Claude knows, every preference, every project — it all follows you.</p>
+
+  <div class="tip">
+    <div class="tip-title">What This Enables</div>
+    <div class="tip-body">Start a competitive analysis on your home Mac before bed. Wake up to a finished report. Review it from a coffee shop on your laptop. Add tasks from your phone (via iCloud). Claude becomes an always-available, context-aware assistant that never loses your thread.</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- ARCHITECTURE -->
+<!-- ============================================ -->
+<div class="section" id="architecture">
+  <h2><span class="icon">&#x1F3D7;</span> Architecture</h2>
+  <p>The setup has three layers:</p>
+
+  <h3>1. Claude's Context Files</h3>
+  <ul>
+    <li><strong>CLAUDE.md</strong> — Your identity, preferences, projects, people, glossary, and decisions. Claude reads this at the start of every session.</li>
+    <li><strong>TASKS.md</strong> — Shared todo list. Add tasks on either machine.</li>
+    <li><strong>memory/</strong> — Deeper context files: people profiles, project notes, company info, meeting notes.</li>
+  </ul>
+
+  <h3>2. iCloud Drive (Transport Layer)</h3>
+  <p>A shared folder at <code>~/Library/Mobile Documents/com~apple~CloudDocs/claude-sync/</code> holds the canonical versions of all synced files. Both Macs read from and write to this folder.</p>
+
+  <h3>3. The Sync Daemon</h3>
+  <p>A launchd daemon (<code>com.claude.cowork-sync</code>) runs every 60 seconds on both Macs. It finds the newest Cowork session's files and syncs them bidirectionally with iCloud using MD5 hash-based change detection.</p>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:#4ade80">What Syncs</h4>
+      <ul>
+        <li>CLAUDE.md (identity, prefs, context)</li>
+        <li>TASKS.md (shared todo list)</li>
+        <li>memory/ (people, projects, notes)</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:#f59e0b">What Stays Local</h4>
+      <ul>
+        <li>MCP connector credentials</li>
+        <li>Installed plugins</li>
+        <li>Session history</li>
+        <li>Scheduled tasks (Mac 1 only)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip warn">
+    <div class="tip-title">Why Not Symlinks?</div>
+    <div class="tip-body">Symlinks into iCloud Drive don't work reliably — iCloud treats them as regular files or ignores them. Timestamps aren't preserved between machines either, so file-modification-time comparisons fail. The daemon uses MD5 hashes instead, which are bulletproof.</div>
+  </div>
+
+  <h3>Key Technical Details</h3>
+  <ul>
+    <li>Cowork stores CLAUDE.md in per-session folders at <code>~/Library/Application Support/Claude/local-agent-mode-sessions/</code>. The session UUID changes every conversation.</li>
+    <li>The daemon dynamically finds the newest session directory each cycle.</li>
+    <li>When a new session is detected, iCloud is treated as source of truth (seeds the new session, doesn't overwrite iCloud with the blank default).</li>
+    <li><code>/bin/bash</code> needs Full Disk Access to write to iCloud Drive (launchd runs bash directly, not through Terminal).</li>
+  </ul>
+</div>
+
+<!-- ============================================ -->
+<!-- SYNC SCRIPT -->
+<!-- ============================================ -->
+<div class="section" id="sync-script">
+  <h2><span class="icon">&#x1F504;</span> Setting Up the Sync</h2>
+  <p>Here's the high-level setup process. Ask Claude to help you build and customize the sync script for your specific setup.</p>
+
+  <h3>Prerequisites</h3>
+  <ul>
+    <li>Two Macs with iCloud Drive enabled and signed into the same Apple ID</li>
+    <li>Claude Desktop app installed on both</li>
+    <li><code>/bin/bash</code> added to Full Disk Access on both Macs (System Settings &gt; Privacy &amp; Security &gt; Full Disk Access)</li>
+  </ul>
+
+  <h3>What the Script Does</h3>
+  <ul>
+    <li>Finds the newest Cowork session directory</li>
+    <li>Computes MD5 hashes of local and iCloud versions of each file</li>
+    <li>Compares hashes against last-known state (stored in <code>~/.claude-sync/state/</code>)</li>
+    <li>Copies the changed version to the other side</li>
+    <li>Detects new sessions and seeds them from iCloud (source of truth)</li>
+    <li>Logs all activity to <code>~/.claude-sync/sync.log</code></li>
+  </ul>
+
+  <h3>Installation Steps</h3>
+  <div class="scenario">
+    <div class="steps">
+      <span>1.</span> Create the sync directory: <code style="color:#4ade80">mkdir -p ~/.claude-sync/state</code><br>
+      <span>2.</span> Create the iCloud sync folder: <code style="color:#4ade80">mkdir -p ~/Library/Mobile\ Documents/com~apple~CloudDocs/claude-sync</code><br>
+      <span>3.</span> Write the sync script to <code style="color:#4ade80">~/.claude-sync/cowork-sync.sh</code> (ask Claude to generate it for you)<br>
+      <span>4.</span> Make it executable: <code style="color:#4ade80">chmod +x ~/.claude-sync/cowork-sync.sh</code><br>
+      <span>5.</span> Create a launchd plist at <code style="color:#4ade80">~/Library/LaunchAgents/com.claude.cowork-sync.plist</code> that runs the script every 60 seconds<br>
+      <span>6.</span> Load the daemon: <code style="color:#4ade80">launchctl load ~/Library/LaunchAgents/com.claude.cowork-sync.plist</code><br>
+      <span>7.</span> Repeat on the second Mac
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">Pro Tip: Let Claude Build It</div>
+    <div class="tip-body">Open Cowork and say: "I want to set up a dual-Mac second brain with iCloud sync. Help me create the sync script and launchd daemon." Claude will generate everything customized for your system. This playbook documents the architecture — Claude handles the implementation.</div>
+  </div>
+
+  <h3>Always-On Mac Configuration</h3>
+  <ul>
+    <li><strong>Prevent automatic sleeping:</strong> System Settings &gt; Battery &gt; Options &gt; "Prevent automatic sleeping when display is off" &rarr; ON</li>
+    <li><strong>Disable auto-install updates:</strong> System Settings &gt; General &gt; Software Update &gt; Automatic Updates &gt; "Install macOS updates" &rarr; OFF (prevents surprise restarts)</li>
+    <li><strong>Keep the lid open</strong> (or use an external display for clamshell mode)</li>
+    <li><strong>Display sleep is fine</strong> (set to 5 min — the machine stays awake)</li>
+  </ul>
+</div>
+
+<!-- ============================================ -->
+<!-- MEMORY SYSTEM -->
+<!-- ============================================ -->
+<div class="section" id="memory">
+  <h2><span class="icon">&#x1F4DD;</span> Memory System</h2>
+  <p>The more context Claude has, the more it feels like a real colleague. Your CLAUDE.md is Claude's long-term memory — it carries across every session on both machines and compounds over time.</p>
+
+  <h3>Recommended CLAUDE.md Structure</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:#4ade80">Top — Daily Context</h4>
+      <ul>
+        <li><strong>About Me</strong> — who you are, what you do</li>
+        <li><strong>Preferences</strong> — tone, format, deliverable style</li>
+        <li><strong>Work</strong> — company, role, products, team</li>
+        <li><strong>Projects</strong> — active projects + status</li>
+        <li><strong>People</strong> — contacts with role/context</li>
+        <li><strong>Terms</strong> — acronyms and shorthand</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:#60a5fa">Bottom — Infrastructure</h4>
+      <ul>
+        <li><strong>Capabilities</strong> — plugins and skills</li>
+        <li><strong>Sync Setup</strong> — paths, commands</li>
+        <li><strong>Scheduled Tasks</strong> — what runs automatically</li>
+        <li><strong>Resources</strong> — reference docs</li>
+        <li><strong>Decision Log</strong> — key choices with dates</li>
+        <li><strong>Lessons Learned</strong> — insights for Claude</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">Just Tell Claude</div>
+    <div class="tip-body">You never need to edit files manually. Say: "Remember that Sarah is my accountant" or "Add a note that I prefer dark mode." Claude updates CLAUDE.md for you, and the daemon syncs it to the other machine within 60 seconds.</div>
+  </div>
+
+  <h3>The memory/ Directory</h3>
+  <p>For deeper context, use the memory/ folder. It syncs too:</p>
+  <ul>
+    <li><strong>memory/people/</strong> — detailed profiles</li>
+    <li><strong>memory/projects/</strong> — project notes and briefs</li>
+    <li><strong>memory/work/</strong> — company context, team info</li>
+    <li><strong>memory/glossary.md</strong> — full terminology reference</li>
+  </ul>
+
+  <div class="tip purple">
+    <div class="tip-title">The Compounding Effect</div>
+    <div class="tip-body">After a few weeks, Claude knows your projects, your people, your communication style, and your preferences. It stops asking clarifying questions and starts anticipating what you need. Spend 30 seconds adding context now, save hours over the next month.</div>
+  </div>
+
+  <h3>Memory Best Practices</h3>
+  <ul>
+    <li><strong>End-of-session habit:</strong> "Save anything important from this session to memory."</li>
+    <li><strong>After meetings:</strong> "Save the key points and action items from my call with [person]."</li>
+    <li><strong>When you make a decision:</strong> "Log this decision: we're going with X because of Y."</li>
+    <li><strong>When something changes:</strong> "Update memory: [person] is no longer at [company], new contact is [name]."</li>
+  </ul>
+</div>
+
+<!-- ============================================ -->
+<!-- SCHEDULED TASKS -->
+<!-- ============================================ -->
+<div class="section" id="scheduled">
+  <h2><span class="icon">&#x23F0;</span> Scheduled Tasks</h2>
+  <p>Scheduled tasks run on your always-on Mac. They fire automatically — no interaction needed. Think of them as personal automations that work while you sleep, commute, or focus on other things.</p>
+
+  <h3>Ideas for Scheduled Tasks</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:#4ade80">Monitoring & Intel</h4>
+      <ul>
+        <li>Morning briefing (calendar, email digest, action items)</li>
+        <li>Job board scanner for target roles</li>
+        <li>Competitor website change detection</li>
+        <li>Industry news digest</li>
+        <li>Website health checks</li>
+        <li>RSS feed monitoring</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:#60a5fa">Productivity & Reports</h4>
+      <ul>
+        <li>Daily task recap + tomorrow's priorities</li>
+        <li>Weekly project status roundup</li>
+        <li>Friday "week in review" digest</li>
+        <li>End-of-day summary</li>
+        <li>Email thread digest (unread/flagged)</li>
+        <li>Monthly goal check-in</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">Creating Tasks</div>
+    <div class="tip-body">On your always-on Mac, just say: "Create a scheduled task that checks my inbox every morning at 7am and summarizes anything urgent." Claude sets it up with the /schedule skill. You can also create one-time tasks: "Remind me tomorrow at 3pm to follow up with [person]."</div>
+  </div>
+
+  <div class="tip warn">
+    <div class="tip-title">Scope Each Task Narrowly</div>
+    <div class="tip-body">The best scheduled tasks do one thing well. "Scan job boards and rank results" is better than "Do my entire morning routine." Split complex workflows into separate tasks that run in sequence (e.g., 6:00am scan, 6:15am summarize, 6:30am draft responses).</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- CONNECTORS -->
+<!-- ============================================ -->
+<div class="section" id="connectors">
+  <h2><span class="icon">&#x1F517;</span> Connectors</h2>
+  <p>Connectors let Claude read and act on your real data — email, calendar, docs, and more. They use MCP (Model Context Protocol) to bridge Claude and your tools securely. 38+ connectors are available including Gmail, Google Calendar, Notion, Slack, Google Drive, HubSpot, Jira, Salesforce, and more.</p>
+
+  <h3>Example Prompts That Use Connectors</h3>
+  <div class="recipe">
+    <div class="recipe-title">Email Triage</div>
+    <div class="recipe-prompt">"Check my Gmail for anything urgent from the last 12 hours. Summarize the top 5 threads I should respond to and draft replies for the straightforward ones."</div>
+  </div>
+  <div class="recipe">
+    <div class="recipe-title">Meeting Prep</div>
+    <div class="recipe-prompt">"I have a call with [person] at 2pm. Pull their recent emails, check our calendar invite for context, and search Notion for any prior notes. Give me a one-page prep brief."</div>
+  </div>
+  <div class="recipe">
+    <div class="recipe-title">Calendar Audit</div>
+    <div class="recipe-prompt">"Look at my calendar for next week. Flag double-bookings, find my longest free block, and suggest which meetings could be declined."</div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">Discovering New Connectors</div>
+    <div class="tip-body">Just mention a tool you want to use: "Can you check my Slack messages?" Claude will search the MCP registry, find the connector, and offer to help you install it. You can also ask directly: "What connectors are available for project management?"</div>
+  </div>
+
+  <div class="tip warn">
+    <div class="tip-title">Connectors Are Per-Machine</div>
+    <div class="tip-body">If you connect Gmail on Mac 1, it's not automatically connected on Mac 2. Install and authenticate connectors on each machine separately. Context (CLAUDE.md) syncs, credentials don't.</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- RECIPES -->
+<!-- ============================================ -->
+<div class="section" id="recipes">
+  <h2><span class="icon">&#x1F373;</span> Ready-to-Use Recipes</h2>
+  <p>Copy-paste these prompts into Cowork. Each is tagged with where it runs best.</p>
+
+  <h3>Research</h3>
+  <div class="recipe">
+    <div class="recipe-title">Deep Competitive Analysis</div>
+    <div class="recipe-prompt">"Research [company] as a competitor. Cover their positioning, key messaging, leadership team, recent funding, product features, and how they compare to us. Save as an HTML report."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge green">Always-On Mac</span> Takes 10-15 min</div>
+  </div>
+  <div class="recipe">
+    <div class="recipe-title">Person Research</div>
+    <div class="recipe-prompt">"Research [name] at [company]. Find their background, recent activity, and anything relevant to our upcoming conversation. Check email and notes for prior interactions."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge blue">Either machine</span> Takes 3-5 min</div>
+  </div>
+
+  <h3>Content</h3>
+  <div class="recipe">
+    <div class="recipe-title">Email with Full Context</div>
+    <div class="recipe-prompt">"Search Gmail for my recent thread with [person]. Read the full conversation, then draft a follow-up that [your intent]. Match my usual tone."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge blue">Either machine</span> Takes 2-3 min</div>
+  </div>
+  <div class="recipe">
+    <div class="recipe-title">Presentation Builder</div>
+    <div class="recipe-prompt">"Create a 10-slide presentation about [topic]. Audience is [who]. Clean and professional. Include speaker notes. Save as .pptx."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge blue">Either machine</span> Takes 5-8 min</div>
+  </div>
+
+  <h3>Productivity</h3>
+  <div class="recipe">
+    <div class="recipe-title">Daily Standup Prep</div>
+    <div class="recipe-prompt">"Check my TASKS.md, calendar for today, and any recent email threads. Give me a 30-second standup update: what I did yesterday, what I'm doing today, any blockers."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge blue">Either machine</span> Takes 1-2 min</div>
+  </div>
+  <div class="recipe">
+    <div class="recipe-title">End-of-Week Review</div>
+    <div class="recipe-prompt">"Review my TASKS.md and calendar from this week. Summarize what I accomplished, what's still open, and suggest priorities for next week. Update TASKS.md accordingly."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge blue">Either machine</span> Takes 3-5 min</div>
+  </div>
+
+  <h3>Life Admin</h3>
+  <div class="recipe">
+    <div class="recipe-title">Trip Planning</div>
+    <div class="recipe-prompt">"Plan a trip to [destination] for [dates]. Research flights, hotels, and build a day-by-day itinerary with restaurants and activities. Budget: [amount]. Save as interactive HTML."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge green">Always-On Mac</span> Takes 15-20 min</div>
+  </div>
+  <div class="recipe">
+    <div class="recipe-title">Financial Doc Roundup</div>
+    <div class="recipe-prompt">"Search Gmail for all emails from [CPA/accountant name] in the last 3 months. Summarize the status, list outstanding action items, and flag deadlines."</div>
+    <div class="recipe-where"><strong>Best on:</strong> <span class="badge blue">Either machine</span> Takes 3-5 min</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- DAILY WORKFLOWS -->
+<!-- ============================================ -->
+<div class="section" id="workflows">
+  <h2><span class="icon">&#x1F3AF;</span> Daily Workflows</h2>
+
+  <h3>Morning (Always-On Mac)</h3>
+  <div class="scenario">
+    <div class="steps">
+      <span>1.</span> Open Cowork — your morning briefing is already generated by scheduled tasks<br>
+      <span>2.</span> Review overnight outputs — "Show me today's briefing"<br>
+      <span>3.</span> Triage email — "Check Gmail for anything urgent, draft quick replies"<br>
+      <span>4.</span> Kick off heavy work — "Research [topic], have it ready by noon"<br>
+      <span>5.</span> Update tasks — "What's on my TASKS.md? Add [new item]"<br>
+      <span>6.</span> Head out — Mac 1 keeps running your jobs
+    </div>
+  </div>
+
+  <h3>Midday (Daily Driver)</h3>
+  <div class="scenario">
+    <div class="steps">
+      <span>1.</span> Open Cowork — full context syncs in automatically<br>
+      <span>2.</span> Quick tasks — "Draft that email" or "Update the project doc"<br>
+      <span>3.</span> Meeting prep — "I have a call in 30 min with [person], prep me"<br>
+      <span>4.</span> Edits sync back to Mac 1 automatically
+    </div>
+  </div>
+
+  <h3>Evening</h3>
+  <div class="scenario">
+    <div class="steps">
+      <span>1.</span> Review the day — "Summarize what I accomplished based on TASKS.md"<br>
+      <span>2.</span> Save context — "Save anything important from today to memory"<br>
+      <span>3.</span> Queue overnight work on Mac 1 — "Generate a [deliverable] by morning"<br>
+      <span>4.</span> Update memory — "Remember that [person] mentioned [detail] today"
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">The "Leave a Note" Pattern</div>
+    <div class="tip-body">Before ending a session: "Add a note to TASKS.md that I should follow up on [X] tomorrow." When you open Cowork on the other machine, it's right there. Like a sticky note that syncs across devices.</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- PLUGINS -->
+<!-- ============================================ -->
+<div class="section" id="plugins">
+  <h2><span class="icon">&#x1F9E9;</span> Plugin Power Moves</h2>
+  <p>Cowork has a growing library of plugins. Most activate automatically based on what you ask. Here are the categories:</p>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:#4ade80">Marketing & Sales</h4>
+      <ul>
+        <li>Content creation (blog, social, email)</li>
+        <li>Campaign planning with KPIs</li>
+        <li>Competitive analysis and battlecards</li>
+        <li>SEO audits</li>
+        <li>Prospect research and outreach</li>
+        <li>Call prep and summaries</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:#60a5fa">Documents & Data</h4>
+      <ul>
+        <li>Create .docx, .pptx, .xlsx, .pdf</li>
+        <li>Data analysis and visualization</li>
+        <li>Interactive HTML dashboards</li>
+        <li>SQL queries across dialects</li>
+        <li>Statistical analysis</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4 style="color:#a78bfa">Operations & Legal</h4>
+      <ul>
+        <li>Contract review with redlines</li>
+        <li>NDA triage (green/yellow/red)</li>
+        <li>Process documentation and SOPs</li>
+        <li>Compliance checks</li>
+        <li>Vendor evaluations</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4 style="color:#f59e0b">Productivity</h4>
+      <ul>
+        <li>Task management (TASKS.md)</li>
+        <li>Memory system</li>
+        <li>Enterprise search across tools</li>
+        <li>Design critique and handoff</li>
+        <li>Brand voice enforcement</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">Search for Plugins</div>
+    <div class="tip-body">New plugins are added regularly. Ask Claude: "What plugins are available for [category]?" or "Search for a plugin that handles [use case]." The plugin marketplace is the fastest-growing part of the Cowork ecosystem.</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- CUSTOM SKILLS -->
+<!-- ============================================ -->
+<div class="section" id="skills">
+  <h2><span class="icon">&#x1F6E0;</span> Custom Skills</h2>
+  <p>Skills are reusable workflows you create for tasks you repeat. Instead of re-explaining what you want every time, write instructions once and trigger them forever.</p>
+
+  <h3>When to Create a Skill</h3>
+  <ul>
+    <li>You find yourself giving Claude the same instructions more than twice</li>
+    <li>You have a specific format that needs to be followed exactly</li>
+    <li>You want a slash command shortcut for a common workflow</li>
+  </ul>
+
+  <div class="recipe">
+    <div class="recipe-title">Create a Skill</div>
+    <div class="recipe-prompt">"Create a new skill called 'weekly-review' that checks my TASKS.md, summarizes what I completed this week, flags overdue items, and generates a clean weekly summary."</div>
+  </div>
+
+  <div class="recipe">
+    <div class="recipe-title">Capture a Great Workflow as a Skill</div>
+    <div class="recipe-prompt">"We just did a great workflow for [X]. Turn what we just did into a reusable skill so I can run it again with one command."</div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">Keep Skills Focused</div>
+    <div class="tip-body">One giant skill performs worse than three focused skills. "draft-linkedin-post," "weekly-seo-check," and "competitor-snapshot" are better than one "do-everything-marketing" skill.</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- POWER TIPS -->
+<!-- ============================================ -->
+<div class="section" id="power-tips">
+  <h2><span class="icon">&#x26A1;</span> Power Tips</h2>
+
+  <div class="tip">
+    <div class="tip-title">1. Front-Load Your Memory in Week One</div>
+    <div class="tip-body">Spend 10 minutes a day adding people, projects, terms, and preferences. By day 7, Claude feels like a colleague who's worked with you for months.</div>
+  </div>
+
+  <div class="tip blue">
+    <div class="tip-title">2. TASKS.md Is Your Cross-Device Todo</div>
+    <div class="tip-body">Add tasks on either machine — they sync. Ask "What's on my plate?" from anywhere. End each session with "Update TASKS.md with what we did and what's next."</div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">3. Ask for Interactive HTML Deliverables</div>
+    <div class="tip-body">For anything complex, ask Claude for an interactive HTML file — checkboxes, collapsible sections, copy buttons, progress bars. Way more useful than plain text.</div>
+  </div>
+
+  <div class="tip purple">
+    <div class="tip-title">4. Chain Tasks Across Time</div>
+    <div class="tip-body">"Generate 20 blog post ideas" (overnight) &rarr; "Take the top 5 and draft outlines" (morning). Your second brain works the night shift.</div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">5. The Decision Log Prevents Re-Debates</div>
+    <div class="tip-body">Log key decisions. Future sessions won't re-ask settled questions. "We chose Squarespace because..." &rarr; saved, never revisited unless you want to.</div>
+  </div>
+
+  <div class="tip blue">
+    <div class="tip-title">6. Turn Great Sessions into Skills</div>
+    <div class="tip-body">When Claude nails a workflow, say "Turn what we just did into a reusable skill." Next time, one command recreates the whole thing.</div>
+  </div>
+
+  <div class="tip warn">
+    <div class="tip-title">7. Use Sub-Agents for Parallel Work</div>
+    <div class="tip-body">Claude can split work across sub-agents. "Research these three competitors in parallel" &rarr; ~10 min instead of ~30 min. Great for batch research and multi-file analysis.</div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">8. Use /compact for Long Sessions</div>
+    <div class="tip-body">When sessions get long, type /compact to compress conversation history while preserving key details. Essential for marathon sessions.</div>
+  </div>
+
+  <div class="tip blue">
+    <div class="tip-title">9. "Save to Memory" as Your Session Closer</div>
+    <div class="tip-body">Before ending any productive session: "Save anything important from this session to memory." Claude extracts key decisions, contacts, and updates — so the next session picks up where you left off.</div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">10. Scheduled Tasks Can Use Your Connectors</div>
+    <div class="tip-body">Tasks on your always-on Mac can access Gmail, Calendar, Notion (if connected). Your morning briefing can pull from real email and calendar data, not just guesses.</div>
+  </div>
+
+  <div class="tip purple">
+    <div class="tip-title">11. Install Plugins and Connectors on BOTH Machines</div>
+    <div class="tip-body">Context syncs, tools don't. If you add a plugin on one Mac, install it on the other too. Same for MCP connectors — authenticate each one per-machine.</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- QUICK COMMANDS -->
+<!-- ============================================ -->
+<div class="section" id="commands">
+  <h2><span class="icon">&#x1F4DF;</span> Quick Reference Commands</h2>
+  <p>Run these in Terminal on either machine.</p>
+
+  <div class="cmd-wrap">
+    <div class="cmd-label">Force sync now</div>
+    <div class="cmd" id="cmd-1">bash ~/.claude-sync/cowork-sync.sh</div>
+    <button class="copy-btn" onclick="copyCode(this, 'cmd-1')">Copy</button>
+  </div>
+
+  <div class="cmd-wrap">
+    <div class="cmd-label">Check daemon status</div>
+    <div class="cmd" id="cmd-2">launchctl list | grep cowork-sync</div>
+    <button class="copy-btn" onclick="copyCode(this, 'cmd-2')">Copy</button>
+  </div>
+
+  <div class="cmd-wrap">
+    <div class="cmd-label">View recent sync activity</div>
+    <div class="cmd" id="cmd-3">tail -20 ~/.claude-sync/sync.log</div>
+    <button class="copy-btn" onclick="copyCode(this, 'cmd-3')">Copy</button>
+  </div>
+
+  <div class="cmd-wrap">
+    <div class="cmd-label">Check for errors</div>
+    <div class="cmd" id="cmd-4">cat ~/.claude-sync/sync-stderr.log</div>
+    <button class="copy-btn" onclick="copyCode(this, 'cmd-4')">Copy</button>
+  </div>
+
+  <div class="cmd-wrap">
+    <div class="cmd-label">Restart daemon</div>
+    <div class="cmd" id="cmd-5">launchctl unload ~/Library/LaunchAgents/com.claude.cowork-sync.plist && launchctl load ~/Library/LaunchAgents/com.claude.cowork-sync.plist</div>
+    <button class="copy-btn" onclick="copyCode(this, 'cmd-5')">Copy</button>
+  </div>
+
+  <div class="cmd-wrap">
+    <div class="cmd-label">Full morning health check</div>
+    <div class="cmd" id="cmd-6">echo "=== DAEMON ===" && launchctl list | grep cowork-sync && echo "" && echo "=== SYNC LOG ===" && tail -10 ~/.claude-sync/sync.log && echo "" && echo "=== ERRORS ===" && cat ~/.claude-sync/sync-stderr.log && echo "" && echo "=== ICLOUD ===" && head -5 ~/Library/Mobile\ Documents/com~apple~CloudDocs/claude-sync/CLAUDE.md</div>
+    <button class="copy-btn" onclick="copyCode(this, 'cmd-6')">Copy</button>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- TROUBLESHOOTING -->
+<!-- ============================================ -->
+<div class="section" id="troubleshooting">
+  <h2><span class="icon">&#x1F527;</span> Troubleshooting</h2>
+
+  <div class="scenario">
+    <div class="label">New session missing my context</div>
+    <div class="steps">Normal — daemon seeds within 60 seconds. Force sync: <code style="color:#4ade80">bash ~/.claude-sync/cowork-sync.sh</code></div>
+  </div>
+
+  <div class="scenario">
+    <div class="label">"Operation not permitted" in error log</div>
+    <div class="steps">/bin/bash needs Full Disk Access. System Settings &gt; Privacy &amp; Security &gt; Full Disk Access &gt; + &gt; Cmd+Shift+G &gt; /bin &gt; select bash &gt; Open &gt; toggle ON. Restart daemon.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="label">Daemon stopped running</div>
+    <div class="steps"><code style="color:#4ade80">launchctl list | grep cowork-sync</code> — if empty, reload: <code style="color:#4ade80">launchctl load ~/Library/LaunchAgents/com.claude.cowork-sync.plist</code></div>
+  </div>
+
+  <div class="scenario">
+    <div class="label">Always-on Mac went to sleep</div>
+    <div class="steps">Battery &gt; Options &gt; "Prevent automatic sleeping" must be ON. Keep lid open. No retry for missed scheduled tasks.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="label">Scheduled task didn't run</div>
+    <div class="steps">Tasks only run while the Mac is awake and Claude Desktop is open. Check: lid open? Sleep prevention on? Claude app running? Was there an auto-update restart?</div>
+  </div>
+
+  <div class="scenario">
+    <div class="label">Changes not syncing between machines</div>
+    <div class="steps">Check logs on both: <code style="color:#4ade80">tail -10 ~/.claude-sync/sync.log</code> and <code style="color:#4ade80">cat ~/.claude-sync/sync-stderr.log</code>. Most common fix: add /bin/bash to Full Disk Access.</div>
+  </div>
+
+  <div class="scenario">
+    <div class="label">Nuclear reset</div>
+    <div class="steps">Stop daemon, delete state, restart: <code style="color:#4ade80">launchctl unload ~/Library/LaunchAgents/com.claude.cowork-sync.plist && rm -rf ~/.claude-sync/state/ && launchctl load ~/Library/LaunchAgents/com.claude.cowork-sync.plist</code></div>
+  </div>
+</div>
+
+<div style="text-align:center; padding: 32px 0 16px; color:#444; font-size: 12px;">
+  The Claude Second Brain Playbook &middot; Built by <a href="https://austinvirts.com" style="color:#4ade80; text-decoration:none;">Austin Virts</a> &middot; March 2026<br>
+  <span style="color:#333; font-size:11px;">Questions? Find me on <a href="https://x.com/austinvirts" style="color:#555; text-decoration:none;">X/Twitter</a></span>
+</div>
+
+<script>
+function copyCode(btn, id) {
+  const block = document.getElementById(id);
+  const text = block.textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+</script>
+</body>
+</html>
