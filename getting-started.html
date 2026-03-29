@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - Claude Second Brain</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #c9a0ff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: #fff;
+            font-size: 1.75em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #fff;
+            font-size: 1.25em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        strong {
+            color: #fff;
+        }
+
+        a {
+            color: #c9a0ff;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #222;
+            margin: 30px 0;
+        }
+
+        code {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Courier, monospace;
+            font-size: 0.9em;
+            color: #b8e6b8;
+        }
+
+        pre {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #b8e6b8;
+            font-size: 0.85em;
+            display: block;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        blockquote {
+            border-left: 3px solid #c9a0ff;
+            padding-left: 15px;
+            margin-left: 0;
+            margin-bottom: 15px;
+            color: #b8b8b8;
+            font-style: italic;
+        }
+
+        blockquote > p {
+            margin-bottom: 0;
+        }
+
+        .intro-text {
+            color: #b8b8b8;
+            margin-bottom: 20px;
+            font-size: 1.05em;
+        }
+
+        .time-required {
+            color: #c9a0ff;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .requirements {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .requirements h4 {
+            color: #fff;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .requirements ul {
+            margin-left: 20px;
+        }
+
+        .requirements li {
+            color: #e0e0e0;
+        }
+
+        .phase-intro {
+            color: #b8b8b8;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .note-box {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+
+        .note-box strong {
+            color: #c9a0ff;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #222;
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #c9a0ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to home</a>
+
+        <h1>Getting Started</h1>
+        <p class="intro-text">A step-by-step guide to setting up your Claude Second Brain with dual-Mac sync.</p>
+
+        <p class="time-required"><strong>Time required:</strong> ~30 minutes for the initial setup</p>
+
+        <div class="requirements">
+            <h4>What you'll need:</h4>
+            <ul>
+                <li>Two Macs signed into the same Apple ID with iCloud Drive enabled</li>
+                <li>Claude Desktop app installed on both (<a href="https://claude.ai/download">download here</a>)</li>
+                <li>Basic comfort with Terminal (copy-paste level is fine)</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>Phase 1: Prepare Both Macs (~5 min)</h2>
+
+        <h3>1.1 Enable iCloud Drive</h3>
+        <p>On both Macs: System Settings &gt; Apple ID &gt; iCloud &gt; iCloud Drive &gt; make sure it's ON.</p>
+
+        <h3>1.2 Add bash to Full Disk Access</h3>
+        <p>The sync daemon needs permission to write to iCloud Drive. On <strong>both</strong> Macs:</p>
+        <ol>
+            <li>System Settings &gt; Privacy &amp; Security &gt; Full Disk Access</li>
+            <li>Click the + button</li>
+            <li>Press Cmd+Shift+G and type <code>/bin</code></li>
+            <li>Select <code>bash</code> and click Open</li>
+            <li>Make sure the toggle is ON</li>
+        </ol>
+
+        <h3>1.3 Install Claude Desktop</h3>
+        <p>Download and install from <a href="https://claude.ai/download">claude.ai/download</a> on both Macs. Open it once to create the initial directories.</p>
+
+        <hr>
+
+        <h2>Phase 2: Create the Sync Infrastructure (~5 min)</h2>
+
+        <p>Run these commands on <strong>both</strong> Macs:</p>
+
+        <p><strong>Create the sync directory:</strong></p>
+        <pre><code>mkdir -p ~/.claude-sync/state</code></pre>
+
+        <p><strong>Create the iCloud sync folder</strong> (only needed on one Mac — iCloud creates it on the other):</p>
+        <pre><code>mkdir -p ~/Library/Mobile\ Documents/com~apple~CloudDocs/claude-sync</code></pre>
+
+        <hr>
+
+        <h2>Phase 3: Create the Sync Script (~5 min)</h2>
+
+        <p>The easiest way: open Claude Cowork on Mac 1 and say:</p>
+
+        <blockquote>
+            <p>"I want to set up a dual-Mac second brain. Create a sync script at ~/.claude-sync/cowork-sync.sh that syncs CLAUDE.md, TASKS.md, and memory/ between my Cowork sessions and iCloud Drive. Use MD5 hash-based change detection, detect new sessions and seed from iCloud, and log all activity."</p>
+        </blockquote>
+
+        <p>Claude will generate the full script customized for your system. Alternatively, see <a href="sync-script.md">sync-script.md</a> for the reference implementation.</p>
+
+        <p>After Claude creates the script, make it executable:</p>
+        <pre><code>chmod +x ~/.claude-sync/cowork-sync.sh</code></pre>
+
+        <p><strong>Copy the script to Mac 2</strong> via iCloud, AirDrop, or just repeat the process on Mac 2.</p>
+
+        <hr>
+
+        <h2>Phase 4: Create the Launch Daemon (~5 min)</h2>
+
+        <p>This makes the sync run automatically every 60 seconds. On <strong>both</strong> Macs, create the file:</p>
+
+        <pre><code>cat &gt; ~/Library/LaunchAgents/com.claude.cowork-sync.plist &lt;&lt; 'PLIST'
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;Label&lt;/key&gt;
+    &lt;string&gt;com.claude.cowork-sync&lt;/string&gt;
+    &lt;key&gt;ProgramArguments&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;/bin/bash&lt;/string&gt;
+        &lt;string&gt;$HOME/.claude-sync/cowork-sync.sh&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;StartInterval&lt;/key&gt;
+    &lt;integer&gt;60&lt;/integer&gt;
+    &lt;key&gt;RunAtLoad&lt;/key&gt;
+    &lt;true/&gt;
+    &lt;key&gt;StandardOutPath&lt;/key&gt;
+    &lt;string&gt;$HOME/.claude-sync/sync.log&lt;/string&gt;
+    &lt;key&gt;StandardErrorPath&lt;/key&gt;
+    &lt;string&gt;$HOME/.claude-sync/sync-stderr.log&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+PLIST</code></pre>
+
+        <div class="note-box">
+            <strong>Note:</strong> Replace <code>$HOME</code> with your actual home directory path (e.g., <code>/Users/yourusername</code>) in the plist file — launchd doesn't expand environment variables.
+        </div>
+
+        <p><strong>Load the daemon:</strong></p>
+        <pre><code>launchctl load ~/Library/LaunchAgents/com.claude.cowork-sync.plist</code></pre>
+
+        <hr>
+
+        <h2>Phase 5: Configure the Always-On Mac (~5 min)</h2>
+
+        <p>On the Mac that will stay home (your "second brain"):</p>
+
+        <h3>Prevent Sleep</h3>
+        <p>System Settings &gt; Battery &gt; Options &gt; <strong>"Prevent automatic sleeping when display is off"</strong> → ON</p>
+
+        <h3>Disable Auto-Install Updates</h3>
+        <p>System Settings &gt; General &gt; Software Update &gt; Automatic Updates &gt; <strong>"Install macOS updates"</strong> → OFF</p>
+
+        <p>(Downloads stay on — updates will be ready when you choose to install them manually.)</p>
+
+        <h3>Physical Setup</h3>
+        <ul>
+            <li>Keep the lid open</li>
+            <li>Plug in to power</li>
+            <li>Display sleep is fine (set to 5 min — the machine stays awake)</li>
+        </ul>
+
+        <hr>
+
+        <h2>Phase 6: Set Up Your CLAUDE.md (~10 min)</h2>
+
+        <p>Open Claude Cowork on Mac 1 and say:</p>
+
+        <blockquote>
+            <p>"Help me set up my CLAUDE.md. I want sections for: About Me, Preferences, my work context, personal projects, people I work with, a glossary of terms, and a decision log."</p>
+        </blockquote>
+
+        <p>Tell Claude about yourself, your projects, your contacts, and how you like things done. The more context you add, the better Claude becomes.</p>
+
+        <p><strong>Recommended structure:</strong></p>
+        <ol>
+            <li>About Me</li>
+            <li>Preferences (tone, format, deliverable style)</li>
+            <li>Work (company, role, products)</li>
+            <li>Personal Projects</li>
+            <li>People (contacts with role/context)</li>
+            <li>Terms &amp; Glossary</li>
+            <li>Capabilities (plugins installed)</li>
+            <li>Dual-MacBook Setup (sync info)</li>
+            <li>Scheduled Tasks</li>
+            <li>Decision Log</li>
+            <li>Lessons Learned</li>
+        </ol>
+
+        <hr>
+
+        <h2>Phase 7: Test the Sync (~5 min)</h2>
+
+        <h3>On Mac 1:</h3>
+        <pre><code># Check daemon is running
+launchctl list | grep cowork-sync
+
+# Check sync log
+tail -10 ~/.claude-sync/sync.log</code></pre>
+
+        <h3>Test cross-machine sync:</h3>
+        <ol>
+            <li>Open Cowork on Mac 1 and say: "Add a test note to CLAUDE.md: SYNC TEST"</li>
+            <li>Wait 60 seconds</li>
+            <li>Open Cowork on Mac 2 and ask: "Do you see a SYNC TEST note?"</li>
+            <li>If yes — you're syncing! Remove the test note.</li>
+        </ol>
+
+        <h3>If it doesn't work:</h3>
+        <ul>
+            <li>Check error log: <code>cat ~/.claude-sync/sync-stderr.log</code></li>
+            <li>Most common issue: bash needs Full Disk Access (Phase 1.2)</li>
+            <li>Force sync: <code>bash ~/.claude-sync/cowork-sync.sh</code></li>
+        </ul>
+
+        <hr>
+
+        <h2>Phase 8: Install Plugins (~5 min)</h2>
+
+        <p>Install the same plugins on both Macs. In Cowork, browse available plugins or ask Claude: "What plugins are available for marketing?" (or sales, data, legal, etc.)</p>
+
+        <p><strong>Remember:</strong> Plugins are per-machine. Install them on both Macs separately.</p>
+
+        <p><strong>Same for connectors</strong> (Gmail, Calendar, Notion, etc.): authenticate on each Mac independently.</p>
+
+        <hr>
+
+        <h2>Phase 9: Create Scheduled Tasks</h2>
+
+        <p>On your always-on Mac, create your first scheduled task:</p>
+
+        <blockquote>
+            <p>"Create a scheduled task called 'morning-briefing' that runs daily at 7am. It should check my calendar for today's events, summarize any urgent emails, and list my top 3 priorities from TASKS.md."</p>
+        </blockquote>
+
+        <p>See the <a href="playbook.html">Playbook</a> for more scheduled task ideas.</p>
+
+        <hr>
+
+        <h2>You're Done!</h2>
+
+        <p>Your second brain is now running. Here's your daily workflow:</p>
+
+        <ol>
+            <li><strong>Morning:</strong> Review overnight outputs on Mac 1, kick off heavy work</li>
+            <li><strong>Midday:</strong> Use Mac 2 on the go — same context, pick up where you left off</li>
+            <li><strong>Evening:</strong> Save context, queue overnight work on Mac 1</li>
+        </ol>
+
+        <p>For the full guide — workflows, recipes, tips, and troubleshooting — open the <a href="playbook.html">Playbook</a>.</p>
+
+        <hr>
+
+        <h2>Quick Reference</h2>
+
+        <pre><code># Daemon status
+launchctl list | grep cowork-sync
+
+# Recent sync activity
+tail -20 ~/.claude-sync/sync.log
+
+# Force sync
+bash ~/.claude-sync/cowork-sync.sh
+
+# Restart daemon
+launchctl unload ~/Library/LaunchAgents/com.claude.cowork-sync.plist && \
+launchctl load ~/Library/LaunchAgents/com.claude.cowork-sync.plist
+
+# Check for errors
+cat ~/.claude-sync/sync-stderr.log</code></pre>
+
+        <footer>
+            <p>Built as part of the Claude Second Brain setup. Questions? Check the <a href="https://github.com">GitHub repo</a>.</p>
+        </footer>
+    </div>
+</body>
+</html>
