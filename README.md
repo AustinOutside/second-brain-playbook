@@ -2,6 +2,8 @@
 
 Turn Claude into a 24/7 personal assistant with a dual-Mac setup, persistent memory, and automated workflows.
 
+**👉 [View the live site](https://austinoutside.github.io/second-brain-playbook/)**
+
 ## What Is This?
 
 A framework for running Claude Cowork (Anthropic's desktop AI) as an always-on "second brain" — one Mac stays home running scheduled tasks and long jobs, while the other travels with you. A background sync daemon keeps Claude's memory consistent across both machines through iCloud Drive.
