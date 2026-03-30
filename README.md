@@ -1,6 +1,6 @@
 # The Claude Second Brain
 
-Turn Claude into a 24/7 personal assistant with a dual-Mac setup, persistent memory, and automated workflows.
+Turn Claude into a 24/7 second brain with a dual-Mac setup, persistent memory, and automated workflows.
 
 **👉 [View the live site](https://austinoutside.github.io/second-brain-playbook/)**
 

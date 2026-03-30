@@ -203,6 +203,15 @@
         footer a {
             color: #c9a0ff;
         }
+
+        @media (max-width: 600px) {
+            .container { padding: 24px 16px; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            pre code { font-size: 0.75em; }
+            table { font-size: 0.85em; }
+        }
     </style>
 </head>
 <body>
@@ -265,7 +274,7 @@
             <p>"I want to set up a dual-Mac second brain. Create a sync script at ~/.claude-sync/cowork-sync.sh that syncs CLAUDE.md, TASKS.md, and memory/ between my Cowork sessions and iCloud Drive. Use MD5 hash-based change detection, detect new sessions and seed from iCloud, and log all activity."</p>
         </blockquote>
 
-        <p>Claude will generate the full script customized for your system. Alternatively, see <a href="sync-script.md">sync-script.md</a> for the reference implementation.</p>
+        <p>Claude will generate the full script customized for your system. Alternatively, see <a href="sync-script.html">Sync Script Reference</a> for the reference implementation.</p>
 
         <p>After Claude creates the script, make it executable:</p>
         <pre><code>chmod +x ~/.claude-sync/cowork-sync.sh</code></pre>
